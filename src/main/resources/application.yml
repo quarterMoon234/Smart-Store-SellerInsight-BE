@@ -57,6 +57,13 @@ springdoc:
     tags-sorter: alpha
   show-actuator: false
 
+naver-commerce:
+  auth:
+    base-url: https://api.commerce.naver.com
+    token-path: /external/v1/oauth2/token
+    connect-timeout-ms: 3000
+    read-timeout-seconds: 5
+
 logging:
   level:
     root: INFO
