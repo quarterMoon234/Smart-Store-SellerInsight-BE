@@ -21,6 +21,8 @@ public enum ErrorCode {
     CSV_IMPORT_INVALID_FILE(HttpStatus.BAD_REQUEST, "IMPORT_400_1", "CSV 파일이 비어 있거나 형식이 올바르지 않습니다."),
     CSV_IMPORT_FAILED(HttpStatus.BAD_REQUEST, "IMPORT_400_2", "CSV 가져오기에 실패했습니다."),
 
+    DAILY_METRIC_NOT_FOUND(HttpStatus.NOT_FOUND, "METRIC_404_1", "일별 지표를 찾을 수 없습니다."),
+
     DB_CONNECTION_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "HEALTH_503", "데이터베이스 연결에 실패했습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON_500", "서버 내부 오류가 발생했습니다.");
 
