@@ -13,6 +13,10 @@ spring:
     init:
       mode: never
 
+app:
+  security:
+    encryption-key: ${APP_ENCRYPTION_KEY:0123456789abcdef0123456789abcdef}
+
 logging:
   level:
     root: INFO

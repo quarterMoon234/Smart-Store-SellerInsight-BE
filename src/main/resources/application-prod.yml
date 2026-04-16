@@ -13,6 +13,10 @@ spring:
     init:
       mode: never
 
+app:
+  security:
+    encryption-key: ${APP_ENCRYPTION_KEY}
+
 server:
   forward-headers-strategy: framework
 
