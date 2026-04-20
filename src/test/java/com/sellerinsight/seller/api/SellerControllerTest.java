@@ -2,6 +2,7 @@ package com.sellerinsight.seller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sellerinsight.importjob.domain.ImportJobRepository;
+import com.sellerinsight.metric.domain.DailyMetricRepository;
 import com.sellerinsight.order.domain.CustomerOrderRepository;
 import com.sellerinsight.order.domain.OrderItemRepository;
 import com.sellerinsight.product.domain.ProductRepository;
@@ -52,8 +53,12 @@ class SellerControllerTest {
     @Autowired
     private SellerCredentialRepository sellerCredentialRepository;
 
+    @Autowired
+    private DailyMetricRepository dailyMetricRepository;
+
     @BeforeEach
     void setUp() {
+        dailyMetricRepository.deleteAll();
         orderItemRepository.deleteAll();
         customerOrderRepository.deleteAll();
         productRepository.deleteAll();

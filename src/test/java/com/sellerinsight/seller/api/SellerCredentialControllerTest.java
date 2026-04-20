@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sellerinsight.common.security.CredentialEncryptor;
 import com.sellerinsight.importjob.domain.ImportJobRepository;
+import com.sellerinsight.metric.domain.DailyMetricRepository;
 import com.sellerinsight.order.domain.CustomerOrderRepository;
 import com.sellerinsight.order.domain.OrderItemRepository;
 import com.sellerinsight.product.domain.ProductRepository;
@@ -58,8 +59,12 @@ class SellerCredentialControllerTest {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
+    @Autowired
+    private DailyMetricRepository dailyMetricRepository;
+
     @BeforeEach
     void setUp() {
+        dailyMetricRepository.deleteAll();
         orderItemRepository.deleteAll();
         customerOrderRepository.deleteAll();
         productRepository.deleteAll();
