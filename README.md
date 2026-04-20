@@ -70,6 +70,10 @@
 - 공통 응답 포맷 및 글로벌 예외 처리
 - Health Check API
 - Seller / SellerCredential 예제 도메인
+- 주문 CSV 적재 및 import job 상태 추적
+- 일별 지표 집계, 규칙 기반 인사이트 생성, 파이프라인 실행 이력 저장
+- 판매자 대시보드 조회 API
+- 로컬 시연용 샘플 데이터 시드 API
 - Swagger 문서화
 - 메트릭 및 로그 수집 기반 관측 스택
 - Grafana 기본 대시보드
@@ -111,6 +115,28 @@ docker compose -f docker-compose.observability.yml up -d
 ```bash
 ./gradlew test
 ```
+
+## 데모 실행 흐름
+
+```bash
+docker compose up -d
+./gradlew bootRun
+```
+
+```bash
+curl -X POST "http://localhost:8080/api/v1/admin/sample-data/bootstrap?scenario=default"
+```
+
+응답의 `targetMetricDate`, `sellerId`를 확인한 뒤:
+
+```bash
+curl -X POST "http://localhost:8080/api/v1/admin/pipelines/daily?date={previousMetricDate}"
+curl -X POST "http://localhost:8080/api/v1/admin/pipelines/daily?date={targetMetricDate}"
+curl "http://localhost:8080/api/v1/sellers/{sellerId}/dashboard"
+curl "http://localhost:8080/api/v1/admin/pipelines/daily/runs?limit=5"
+```
+
+`ORDER_DROP` 규칙까지 보려면 `previousMetricDate`를 먼저 집계한 뒤 `targetMetricDate`를 실행해야 합니다.
 
 ## 문서
 
