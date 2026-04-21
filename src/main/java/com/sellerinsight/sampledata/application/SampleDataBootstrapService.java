@@ -135,7 +135,8 @@ public class SampleDataBootstrapService {
                         "Alpha 베스트셀러",
                         new BigDecimal("15000"),
                         12,
-                        "ON_SALE"
+                        "ON_SALE",
+                        importedAt(previousMetricDate)
                 )
         );
         Product soldOutProduct = productRepository.saveAndFlush(
@@ -145,7 +146,8 @@ public class SampleDataBootstrapService {
                         "Alpha 품절 상품",
                         new BigDecimal("23000"),
                         0,
-                        "SOLD_OUT"
+                        "SOLD_OUT",
+                        importedAt(previousMetricDate)
                 )
         );
         Product staleProduct = productRepository.saveAndFlush(
@@ -155,7 +157,8 @@ public class SampleDataBootstrapService {
                         "Alpha 장기 미판매 상품",
                         new BigDecimal("18000"),
                         7,
-                        "ON_SALE"
+                        "ON_SALE",
+                        importedAt(staleMetricDate)
                 )
         );
 
@@ -247,7 +250,8 @@ public class SampleDataBootstrapService {
                         "Beta 대표 상품",
                         new BigDecimal("12000"),
                         14,
-                        "ON_SALE"
+                        "ON_SALE",
+                        importedAt(previousMetricDate)
                 )
         );
         Product secondaryProduct = productRepository.saveAndFlush(
@@ -257,7 +261,8 @@ public class SampleDataBootstrapService {
                         "Beta 보조 상품",
                         new BigDecimal("9000"),
                         20,
-                        "ON_SALE"
+                        "ON_SALE",
+                        importedAt(previousMetricDate)
                 )
         );
 
@@ -361,6 +366,10 @@ public class SampleDataBootstrapService {
                         itemAmount
                 )
         );
+    }
+
+    private OffsetDateTime importedAt(LocalDate metricDate) {
+        return metricDate.atStartOfDay(ASIA_SEOUL).toOffsetDateTime();
     }
 
     private record SellerSeedResult(
