@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -63,6 +64,17 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(ErrorCode.DUPLICATE_RESOURCE.getStatus())
+                .body(ApiResponse.fail(errorResponse));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMaxUploadSizeExceededException(
+            MaxUploadSizeExceededException exception
+    ) {
+        ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.CSV_IMPORT_FILE_TOO_LARGE);
+
+        return ResponseEntity
+                .status(ErrorCode.CSV_IMPORT_FILE_TOO_LARGE.getStatus())
                 .body(ApiResponse.fail(errorResponse));
     }
 
