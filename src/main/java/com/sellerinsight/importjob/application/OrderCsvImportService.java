@@ -20,12 +20,11 @@ public class OrderCsvImportService {
     private final SellerRepository sellerRepository;
     private final ImportJobRepository importJobRepository;
     private final OrderCsvImportProcessor orderCsvImportProcessor;
+    private final CsvFileValidator csvFileValidator;
     private final TransactionTemplate transactionTemplate;
 
     public ImportJobResponse importCsv(Long sellerId, MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new BusinessException(ErrorCode.CSV_IMPORT_INVALID_FILE);
-        }
+        csvFileValidator.validate(file);
 
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
@@ -48,6 +47,17 @@ public class OrderCsvImportService {
             transactionTemplate.executeWithoutResult(status ->
                     orderCsvImportProcessor.process(sellerId, importJob.getId(), file)
             );
+        } catch (CsvImportProcessingException exception) {
+            transactionTemplate.executeWithoutResult(status -> {
+                ImportJob failedJob = importJobRepository.findByIdAndSellerId(importJob.getId(), sellerId)
+                        .orElseThrow(() -> new BusinessException(ErrorCode.IMPORT_JOB_NOT_FOUND));
+                failedJob.markFailed(
+                        exception.getTotalRowCount(),
+                        exception.getSuccessRowCount(),
+                        exception.getFailedRowCount(),
+                        exception.getMessage()
+                );
+            });
         } catch (Exception exception) {
             transactionTemplate.executeWithoutResult(status -> {
                 ImportJob failedJob = importJobRepository.findByIdAndSellerId(importJob.getId(), sellerId)
