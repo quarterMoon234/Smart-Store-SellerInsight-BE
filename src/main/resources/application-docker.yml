@@ -1,0 +1,29 @@
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:sellerinsight}
+    username: ${DB_USERNAME:sellerinsight}
+    password: ${DB_PASSWORD:sellerinsight}
+    driver-class-name: org.postgresql.Driver
+
+  sql:
+    init:
+      mode: never
+
+app:
+  security:
+    encryption-key: ${APP_ENCRYPTION_KEY:0123456789abcdef0123456789abcdef}
+
+  api-security:
+    admin-username: ${APP_ADMIN_USERNAME:admin}
+    admin-password: ${APP_ADMIN_PASSWORD:admin-1234}
+    seller-username: ${APP_SELLER_USERNAME:seller-demo}
+    seller-password: ${APP_SELLER_PASSWORD:seller-demo-1234}
+
+logging:
+  level:
+    root: INFO
+    com.sellerinsight: INFO

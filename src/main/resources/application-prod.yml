@@ -1,0 +1,32 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  sql:
+    init:
+      mode: never
+
+app:
+  security:
+    encryption-key: ${APP_ENCRYPTION_KEY}
+
+  api-security:
+    admin-username: ${APP_ADMIN_USERNAME}
+    admin-password: ${APP_ADMIN_PASSWORD}
+    seller-username: ${APP_SELLER_USERNAME}
+    seller-password: ${APP_SELLER_PASSWORD}
+
+server:
+  forward-headers-strategy: framework
+
+logging:
+  level:
+    root: INFO
+    com.sellerinsight: INFO

@@ -1,0 +1,41 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:h2:mem:sellerinsight;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  sql:
+    init:
+      mode: never
+
+app:
+  security:
+    encryption-key: 0123456789abcdef0123456789abcdef
+
+  api-security:
+    admin-username: admin
+    admin-password: admin-1234
+    seller-username: seller-demo
+    seller-password: seller-demo-1234
+
+  pipeline:
+    daily:
+      enabled: false
+      lock-timeout-minutes: 30
+  import:
+    csv:
+      max-file-size: 5MB
+      allowed-content-types:
+        - text/csv
+        - application/csv
+        - application/vnd.ms-excel
+
+logging:
+  level:
+    root: WARN
+    com.sellerinsight: INFO
