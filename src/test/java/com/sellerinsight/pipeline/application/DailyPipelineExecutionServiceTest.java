@@ -65,6 +65,9 @@ class DailyPipelineExecutionServiceTest {
     @Mock
     private PipelineExecutionLockRepository pipelineExecutionLockRepository;
 
+    @Mock
+    private PipelineMetricsRecorder pipelineMetricsRecorder;
+
     @Test
     void runProcessesConnectedSellersAndContinuesOnFailure() {
         Seller seller1 = mock(Seller.class);
@@ -122,6 +125,7 @@ class DailyPipelineExecutionServiceTest {
         verify(insightGenerationService, never()).generate(2L, metricDate);
         verify(pipelineRunRepository, times(2)).saveAndFlush(any(PipelineRun.class));
         verify(pipelineRunItemRepository, times(2)).save(any(PipelineRunItem.class));
+        verify(pipelineMetricsRecorder).recordDailyPipelineRun(any(PipelineRun.class));
     }
 
     @Test
@@ -150,7 +154,8 @@ class DailyPipelineExecutionServiceTest {
                 dailyMetricAggregationService,
                 insightGenerationService,
                 pipelineRunRepository,
-                pipelineRunItemRepository
+                pipelineRunItemRepository,
+                pipelineMetricsRecorder
         );
     }
 
@@ -197,6 +202,7 @@ class DailyPipelineExecutionServiceTest {
                 .deleteByPipelineTypeAndMetricDate(PipelineType.DAILY, metricDate);
         verify(pipelineRunRepository)
                 .findFirstByPipelineTypeAndMetricDateOrderByIdDesc(PipelineType.DAILY, metricDate);
+        verify(pipelineMetricsRecorder).recordDailyPipelineRun(any(PipelineRun.class));
     }
 
     private DailyPipelineExecutionService createServiceWithTimeout(long timeoutMinutes) {
@@ -206,7 +212,8 @@ class DailyPipelineExecutionServiceTest {
                 insightGenerationService,
                 pipelineRunRepository,
                 pipelineRunItemRepository,
-                pipelineExecutionLockRepository
+                pipelineExecutionLockRepository,
+                pipelineMetricsRecorder
         );
 
         ReflectionTestUtils.setField(service, "lockTimeoutMinutes", timeoutMinutes);
