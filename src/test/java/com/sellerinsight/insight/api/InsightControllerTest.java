@@ -30,7 +30,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 class InsightControllerTest {
 

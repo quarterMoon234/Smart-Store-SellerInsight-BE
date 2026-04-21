@@ -32,7 +32,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 class DailyMetricControllerTest {
 
