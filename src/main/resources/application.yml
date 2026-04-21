@@ -5,6 +5,10 @@ spring:
     default: local
   lifecycle:
     timeout-per-shutdown-phase: 20s
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
   jpa:
     open-in-view: false
     hibernate:
@@ -69,6 +73,13 @@ app:
       enabled: true
       cron: 0 5 2 * * *
       lock-timeout-minutes: 30
+  import:
+    csv:
+      max-file-size: 5MB
+      allowed-content-types:
+        - text/csv
+        - application/csv
+        - application/vnd.ms-excel
 
 logging:
   level:

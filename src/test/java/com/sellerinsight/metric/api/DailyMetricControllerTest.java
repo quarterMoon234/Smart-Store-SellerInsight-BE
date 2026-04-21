@@ -100,7 +100,8 @@ class DailyMetricControllerTest {
                         "품절 상품",
                         new BigDecimal("30000"),
                         0,
-                        "SOLD_OUT"
+                        "SOLD_OUT",
+                        OffsetDateTime.parse("2026-04-16T00:00:00+09:00")
                 )
         );
 
@@ -111,7 +112,8 @@ class DailyMetricControllerTest {
                         "판매중 상품",
                         new BigDecimal("15000"),
                         12,
-                        "ON_SALE"
+                        "ON_SALE",
+                        OffsetDateTime.parse("2026-04-16T00:00:00+09:00")
                 )
         );
 
@@ -122,7 +124,8 @@ class DailyMetricControllerTest {
                         "장기 미판매 상품",
                         new BigDecimal("20000"),
                         7,
-                        "ON_SALE"
+                        "ON_SALE",
+                        OffsetDateTime.parse("2026-03-20T00:00:00+09:00")
                 )
         );
 
