@@ -27,6 +27,13 @@ app:
     daily:
       enabled: false
       lock-timeout-minutes: 30
+  import:
+    csv:
+      max-file-size: 5MB
+      allowed-content-types:
+        - text/csv
+        - application/csv
+        - application/vnd.ms-excel
 
 logging:
   level:
