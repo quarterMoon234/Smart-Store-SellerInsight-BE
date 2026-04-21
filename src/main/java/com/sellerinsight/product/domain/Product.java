@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 @Getter
 @Entity
@@ -46,13 +47,17 @@ public class Product extends BaseEntity {
     @Column(name = "product_status", nullable = false, length = 50)
     private String productStatus;
 
+    @Column(name = "last_imported_at", nullable = false)
+    private OffsetDateTime lastImportedAt;
+
     private Product(
             Seller seller,
             String externalProductId,
             String productName,
             BigDecimal salePrice,
             Integer stockQuantity,
-            String productStatus
+            String productStatus,
+            OffsetDateTime lastImportedAt
     ) {
         this.seller = seller;
         this.externalProductId = externalProductId;
@@ -60,6 +65,7 @@ public class Product extends BaseEntity {
         this.salePrice = salePrice;
         this.stockQuantity = stockQuantity;
         this.productStatus = productStatus;
+        this.lastImportedAt = lastImportedAt;
     }
 
     public static Product create(
@@ -68,7 +74,8 @@ public class Product extends BaseEntity {
             String productName,
             BigDecimal salePrice,
             Integer stockQuantity,
-            String productStatus
+            String productStatus,
+            OffsetDateTime lastImportedAt
     ) {
         return new Product(
                 seller,
@@ -76,20 +83,26 @@ public class Product extends BaseEntity {
                 productName,
                 salePrice,
                 stockQuantity,
-                productStatus
+                productStatus,
+                lastImportedAt
         );
     }
 
     public void updateFromImport(
+            OffsetDateTime importedAt,
             String productName,
             BigDecimal salePrice,
             Integer stockQuantity,
             String productStatus
     ) {
+        if (importedAt.isBefore(this.lastImportedAt)) {
+            return;
+        }
+
         this.productName = productName;
         this.salePrice = salePrice;
         this.stockQuantity = stockQuantity;
         this.productStatus = productStatus;
+        this.lastImportedAt = importedAt;
     }
 }
-
