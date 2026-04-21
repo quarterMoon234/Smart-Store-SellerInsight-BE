@@ -125,7 +125,7 @@ class AdminSampleDataControllerTest {
                 .andExpect(jsonPath("$.data.totalSellerCount").value(2))
                 .andExpect(jsonPath("$.data.processedSellerCount").value(2))
                 .andExpect(jsonPath("$.data.failedSellerCount").value(0))
-                .andExpect(jsonPath("$.data.generatedInsightCount").value(2))
+                .andExpect(jsonPath("$.data.generatedInsightCount").value(3))
                 .andExpect(jsonPath("$.data.status").value("SUCCESS"));
 
         Seller alphaSeller = sellerRepository.findAll().stream()
@@ -145,7 +145,7 @@ class AdminSampleDataControllerTest {
                 .andExpect(jsonPath("$.data.latestMetric.orderCount").value(2))
                 .andExpect(jsonPath("$.data.latestMetric.soldOutProductCount").value(1))
                 .andExpect(jsonPath("$.data.latestMetric.staleProductCount").value(1))
-                .andExpect(jsonPath("$.data.insightSummary.totalCount").value(3))
+                .andExpect(jsonPath("$.data.insightSummary.totalCount").value(5))
                 .andExpect(jsonPath("$.data.latestPipelineStatus.status").value("SUCCESS"));
 
         mockMvc.perform(
@@ -154,7 +154,7 @@ class AdminSampleDataControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.insightCount").value(3));
+                .andExpect(jsonPath("$.data.insightCount").value(5));
 
         mockMvc.perform(
                         get("/api/v1/admin/pipelines/daily/runs")

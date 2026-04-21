@@ -18,6 +18,8 @@ import com.sellerinsight.product.domain.ProductRepository;
 import com.sellerinsight.seller.domain.Seller;
 import com.sellerinsight.seller.domain.SellerCredentialRepository;
 import com.sellerinsight.seller.domain.SellerRepository;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +27,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -108,8 +107,8 @@ class InsightControllerTest {
                         seller,
                         LocalDate.of(2026, 4, 16),
                         5,
-                        new BigDecimal("50000"),
-                        new BigDecimal("10000"),
+                        new BigDecimal("30000"),
+                        new BigDecimal("6000"),
                         2,
                         1
                 )
@@ -122,11 +121,13 @@ class InsightControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.metricDate").value("2026-04-16"))
-                .andExpect(jsonPath("$.data.insightCount").value(2))
+                .andExpect(jsonPath("$.data.insightCount").value(4))
                 .andExpect(jsonPath("$.data.insights[0].insightType").value("ORDER_DROP"))
                 .andExpect(jsonPath("$.data.insights[1].insightType").value("SOLD_OUT_RISK"))
+                .andExpect(jsonPath("$.data.insights[2].insightType").value("STALE_PRODUCT_RISK"))
+                .andExpect(jsonPath("$.data.insights[3].insightType").value("AVERAGE_ORDER_AMOUNT_DROP"))
                 .andExpect(jsonPath("$.data.insights[0].recommendations[0].priority").value(1))
-                .andExpect(jsonPath("$.data.insights[1].recommendations[0].priority").value(1));
+                .andExpect(jsonPath("$.data.insights[3].recommendations[0].priority").value(1));
 
         Long insightId = insightRepository.findAll().get(0).getId();
 
@@ -136,7 +137,7 @@ class InsightControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.insightCount").value(2));
+                .andExpect(jsonPath("$.data.insightCount").value(4));
 
         mockMvc.perform(
                         get("/api/v1/sellers/{sellerId}/insights/{insightId}", seller.getId(), insightId)
@@ -144,5 +145,48 @@ class InsightControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.id").value(insightId));
+    }
+
+    @Test
+    void generateNoOrderInsight() throws Exception {
+        Seller seller = sellerRepository.saveAndFlush(
+                Seller.create("seller-002", "no-order-store")
+        );
+
+        dailyMetricRepository.saveAndFlush(
+                DailyMetric.create(
+                        seller,
+                        LocalDate.of(2026, 4, 15),
+                        4,
+                        new BigDecimal("80000"),
+                        new BigDecimal("20000"),
+                        0,
+                        0
+                )
+        );
+
+        dailyMetricRepository.saveAndFlush(
+                DailyMetric.create(
+                        seller,
+                        LocalDate.of(2026, 4, 16),
+                        0,
+                        BigDecimal.ZERO.setScale(2),
+                        BigDecimal.ZERO.setScale(2),
+                        0,
+                        0
+                )
+        );
+
+        mockMvc.perform(
+                        post("/api/v1/sellers/{sellerId}/insights/generate", seller.getId())
+                                .param("date", "2026-04-16")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.metricDate").value("2026-04-16"))
+                .andExpect(jsonPath("$.data.insightCount").value(3))
+                .andExpect(jsonPath("$.data.insights[0].insightType").value("ORDER_DROP"))
+                .andExpect(jsonPath("$.data.insights[1].insightType").value("NO_ORDER"))
+                .andExpect(jsonPath("$.data.insights[2].insightType").value("AVERAGE_ORDER_AMOUNT_DROP"));
     }
 }
