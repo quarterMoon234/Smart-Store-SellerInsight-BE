@@ -74,6 +74,8 @@ Admin:  admin / admin-1234
 Seller: seller-demo / seller-demo-1234
 ```
 
+기본 Seller 계정은 `externalSellerId=seller-demo` 판매자와 연결됩니다. 해당 판매자는 Flyway seed migration으로 자동 생성되므로, 샘플 데이터 생성 없이도 Seller 계정 연결 후 CSV 업로드를 시작할 수 있습니다.
+
 ### 2. PostgreSQL 실행
 
 ```bash
