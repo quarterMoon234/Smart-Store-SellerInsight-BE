@@ -30,6 +30,12 @@ public class SellerController {
                 .body(ApiResponse.ok(sellerService.create(request)));
     }
 
+    @Operation(summary = "현재 인증된 판매자 조회")
+    @GetMapping("/me")
+    public ApiResponse<SellerResponse> getCurrentSeller() {
+        return ApiResponse.ok(sellerService.getCurrentSeller());
+    }
+
     @Operation(summary = "판매자 단건 조회")
     @GetMapping("/{sellerId}")
     public ApiResponse<SellerResponse> get(@PathVariable Long sellerId) {
